@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+    app:
+        hostname: accountant.local
+        container_name: accountant_app
+        build:
+            context: ./docker/webserver
+        environment:
+            - APP_ENV=${APP_ENV}
+            - APP_SECRET=${APP_SECRET}
+            - PHP_FPM_UID=${DOCKER_CONTAINER_UID}
+            - PHP_FPM_GID=${DOCKER_CONTAINER_GID}
+        volumes:
+            - ./:/var/www
+        networks:
+            - default
+            - accountant_network
+            - traefik_proxy
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.accountant.rule=Host(`accountant.local`)"
+            - "traefik.docker.network=traefik_proxy"
+
+    builder:
+        container_name: accountant_builder
+        build:
+            context: ./docker/builder
+        environment:
+            - APP_ENV=${APP_ENV}
+            - APP_SECRET=${APP_SECRET}
+        volumes:
+            - ./:/var/www
+        user: "${DOCKER_CONTAINER_UID}:${DOCKER_CONTAINER_GID}"
+        tty: true
+        stdin_open: true
+
+networks:
+    accountant_network:
+        external: true
+    traefik_proxy:
+        external: true
