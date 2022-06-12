@@ -1,12 +1,25 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
+require("bootstrap/dist/css/bootstrap.min.css");
+require("@fortawesome/fontawesome-free/css/all.css");
+require("./styles/app.css");
 
-// any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
+require("bootstrap/dist/js/bootstrap.bundle.min");
 
-// start the Stimulus application
-import './bootstrap';
+(function () {
+    $(".js-user-card").click(function () {
+        $(".js-user-card").not($(this)).removeClass("selected");
+
+        $(this).toggleClass("selected");
+
+        const form = $(this).closest("form");
+        const userInput = form.find(":input[name='user']");
+        console.log(userInput);
+
+        if ($(this).hasClass("selected")) {
+            userInput.val($(this).data("id"));
+            form.find(".js-submit-button").removeClass("disabled");
+        } else {
+            userInput.val("");
+            form.find(".js-submit-button").addClass("disabled");
+        }
+    });
+})();

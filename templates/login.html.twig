@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center text-center">
+            <form action="{{ path("login") }}" method="POST" style="min-width: 300px;">
+
+                {% include "_messages.html.twig" %}
+
+                {% for user in content.users %}
+                    <div class="card mt-2 mb-2 user-card js-user-card" data-id="{{ user.id }}">
+                        <div class="card-body">
+                            <div>{{ user.firstName }} {{ user.lastName }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <input type="hidden" name="user">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token('login') }}">
+
+                <button class="w-100 btn btn-lg btn-outline-primary js-submit-button disabled" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
