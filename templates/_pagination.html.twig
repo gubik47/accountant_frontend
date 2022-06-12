@@ -1,0 +1,21 @@
+<nav>
+    {% if pagination.numberOfPages > 1 %}
+        <ul class="pagination">
+            <li class="page-item{% if pagination.currentPage == 1 %} disabled{% endif %}">
+                <span class="page-link  js-change-page" data-page="{{ pagination.currentPage - 1 }}">
+                    <span aria-hidden="true">&laquo;</span>
+                </span>
+            </li>
+            {% for i in pagination.minPageToShow..pagination.maxPageToShow %}
+                <li class="page-item{% if i == pagination.currentPage %} active{% endif %}">
+                    <span class="page-link js-change-page" data-page="{{ i }}">{{ i }}</span>
+                </li>
+            {% endfor %}
+            <li class="page-item{% if pagination.currentPage == pagination.numberOfPages %} disabled{% endif %}">
+                <span class="page-link js-change-page" data-page="{{ pagination.currentPage + 1 }}">
+                    <span aria-hidden="true">&raquo;</span>
+                </span>
+            </li>
+        </ul>
+    {% endif %}
+</nav>

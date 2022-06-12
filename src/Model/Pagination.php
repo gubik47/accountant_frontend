@@ -52,14 +52,4 @@ class Pagination
 
         return min($maxPage, $this->numberOfPages);
     }
-
-    public function isPreviousPageEllipsisVisible(): bool
-    {
-        return $this->currentPage - self::NUMBER_CONTROLS_OFFSET > 1;
-    }
-
-    public function isNextPageEllipsisVisible(): bool
-    {
-        return $this->currentPage + self::NUMBER_CONTROLS_OFFSET < $this->numberOfPages;
-    }
 }

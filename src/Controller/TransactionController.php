@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Model\Pagination;
+use App\Model\TransactionList;
 use App\Service\Api\Resource\TransactionResource;
+use App\Service\TransactionRequestQueryParser;
 use App\Type\TransactionType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,19 +15,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class TransactionController extends BaseController
 {
     #[Route("/ajax/load-transactions", name: "load_transactions", methods: ["GET"])]
-    public function loadTransactions(Request $request): Response
+    public function loadTransactions(Request $request, TransactionResource $resource, TransactionRequestQueryParser $queryParser): Response
     {
         if (!$this->isUserSelected()) {
             return $this->json(["status" => "error" , "message" => "User not logged"]);
         }
 
-        $transactionResponse = $this->httpClient->request("GET", "http://api.accountant.local/api/transactions?account=$id");
+        $options = $queryParser->parseQuery($request->query);
 
-        $transactions = json_decode($transactionResponse->getContent(), true)["transactions"];
+        $apiResponse = $resource->getTransactions($options);
 
-        return $this->render("accounts/detail.html.twig", [
-            "account" => $account,
-            "transactions" => $transactions
+        $list = new TransactionList($apiResponse->transactions);
+
+        $items = $this->renderView("transactions/_list.html.twig", [
+            "list" => $list
+        ]);
+
+        $pagination = $this->renderView("_pagination.html.twig", [
+            "pagination" => $list->getPagination()
+        ]);
+
+        return $this->json([
+            "status" => "success",
+            "html" => [
+                "items" => $items,
+                "pagination" => $pagination
+            ]
         ]);
     }
 

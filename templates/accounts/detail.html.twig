@@ -18,16 +18,11 @@
 
                 <a href="{{ path("transactions_upload", {"id": account.id}) }}">Upload transactions</a>
 
-                {% for transaction in content.transactionList.transactions %}
-                    <div class="card mt-2 mb-2">
-                        <div class="card-body">
-                            <div>{{ transaction.dateOfIssue|date("j. n. Y") }}</div>
-                            <div>{{ transaction.label }}</div>
-                            <div>{{ transaction.type }}</div>
-                            <div><strong>{{ transaction.amount|number_format(2, ",", " ") }} Kč</strong></div>
-                        </div>
-                    </div>
-                {% endfor %}
+                <div class="js-transactions-list" data-load-url="{{ path("load_transactions") }}" data-account="{{ account.id }}">
+                    {% include "transactions/_list_section.html.twig" with {
+                        "list": content.transactionList
+                    } %}
+                </div>
             </div>
         </div>
     </div>

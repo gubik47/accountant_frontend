@@ -1,0 +1,9 @@
+<div class="js-transactions-container">
+    {% include "transactions/_list.html.twig" %}
+</div>
+
+<div class="js-pagination-wrapper">
+    {% include "_pagination.html.twig" with {
+        "pagination": list.pagination
+    } %}
+</div>

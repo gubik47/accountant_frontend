@@ -3,6 +3,7 @@ require("@fortawesome/fontawesome-free/css/all.css");
 require("./styles/app.css");
 
 require("bootstrap/dist/js/bootstrap.bundle.min");
+require("./js/TransactionList");
 
 (function () {
     $(".js-user-card").click(function () {
@@ -12,7 +13,6 @@ require("bootstrap/dist/js/bootstrap.bundle.min");
 
         const form = $(this).closest("form");
         const userInput = form.find(":input[name='user']");
-        console.log(userInput);
 
         if ($(this).hasClass("selected")) {
             userInput.val($(this).data("id"));

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Factory\PageFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,13 +25,13 @@ class AccountController extends BaseController
     }
 
     #[Route("/account/{id}", name: "account_detail", methods: ["GET"])]
-    public function accountDetail(int $id, PageFactory $factory): Response
+    public function accountDetail(int $id, Request $request, PageFactory $factory): Response
     {
         if (!$this->isUserSelected()) {
             return $this->redirectToRoute("user_list");
         }
 
-        $content = $factory->createAccountDetailPageContent($id);
+        $content = $factory->createAccountDetailPageContent($id, $request);
 
         if ($content->getAccount()->getUserId() !== $this->getSessionUser()->getId()) {
             // access to another user's accounts is forbidden

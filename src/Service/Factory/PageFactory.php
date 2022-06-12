@@ -10,16 +10,20 @@ use App\Model\TransactionList;
 use App\Model\User;
 use App\Service\Api\Resource\AccountResource;
 use App\Service\Api\Resource\UserResource;
+use App\Service\TransactionRequestQueryParser;
+use Symfony\Component\HttpFoundation\Request;
 
 class PageFactory
 {
     private UserResource $userResource;
     private AccountResource $accountResource;
+    private TransactionRequestQueryParser $transactionRequestQueryParser;
 
-    public function __construct(UserResource $userResource, AccountResource $accountResource)
+    public function __construct(UserResource $userResource, AccountResource $accountResource, TransactionRequestQueryParser $transactionRequestQueryParser)
     {
         $this->userResource = $userResource;
         $this->accountResource = $accountResource;
+        $this->transactionRequestQueryParser = $transactionRequestQueryParser;
     }
 
     public function createUsersPageContent(): UsersPageContent
@@ -54,9 +58,12 @@ class PageFactory
         return $content;
     }
 
-    public function createAccountDetailPageContent(int $accountId): AccountDetailPageContent
+    public function createAccountDetailPageContent(int $accountId, Request $request): AccountDetailPageContent
     {
-        $data = $this->accountResource->getAccountDetailPageData($accountId);
+        $transactionsOptions = $this->transactionRequestQueryParser->parseQuery($request->query);
+        $transactionsOptions["account"] = $accountId;
+
+        $data = $this->accountResource->getAccountDetailPageData($accountId, $transactionsOptions);
 
         $content = new AccountDetailPageContent();
 

@@ -1,0 +1,12 @@
+{% for transaction in list.transactions %}
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            <div>{{ transaction.dateOfIssue|date("j. n. Y") }}</div>
+            <div>{{ transaction.label }}</div>
+            <div>{{ transaction.type }}</div>
+            <div><strong>{{ transaction.amount|number_format(2, ",", " ") }} Kč</strong></div>
+        </div>
+    </div>
+{% else %}
+    <article class="alert alert-info">No transactions found</article>
+{% endfor %}

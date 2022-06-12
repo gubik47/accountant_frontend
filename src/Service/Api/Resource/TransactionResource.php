@@ -12,4 +12,11 @@ class TransactionResource extends Resource
 
         return $this->sendRequests();
     }
+
+    public function getTransactions(array $options): ResourceData
+    {
+        $this->blueprints[] = $this->factory->createTransactionsRequestBlueprint($options);
+
+        return $this->sendRequests();
+    }
 }

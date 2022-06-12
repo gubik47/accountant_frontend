@@ -13,14 +13,9 @@ class AccountResource extends Resource
         return $this->sendRequests();
     }
 
-    public function getAccountDetailPageData(int $accountId): ResourceData
+    public function getAccountDetailPageData(int $accountId, array $transactionOptions): ResourceData
     {
         $this->blueprints[] = $this->factory->createAccountRequestBlueprint($accountId);
-
-        $transactionOptions = [
-            "account" => $accountId
-        ];
-
         $this->blueprints[] = $this->factory->createTransactionsRequestBlueprint($transactionOptions);
 
         return $this->sendRequests();
